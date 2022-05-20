@@ -61,15 +61,15 @@ if img_idx < 0:
     if plot == 'Count Plot':
         fx.count_plot()
     if plot == 'Confusion Matrix':
-        fx.confusion_matrix()
+        fx.confusion_matrix_fx()
     if plot == 'Heatmap':
-        fx.heatmap()
+        fx.heatmap_fx()
     if plot == 'Histogram':
         fx.histogram()
     if plot == 'Scatter Plot':
         fx.scatter_plot()
     if plot == 'Word Cloud':
-        fx.word_cloud()
+        fx.wordcloud_fx()
 
 else:
     st.subheader(f"{plot_dict[img_idx]}")
@@ -80,15 +80,15 @@ else:
     if img_idx == 2:
         fx.count_plot()
     if img_idx == 3:
-        fx.confusion_matrix()
+        fx.confusion_matrix_fx()
     if img_idx == 4:
-        fx.heatmap()
+        fx.heatmap_fx()
     if img_idx == 5:
         fx.histogram()
     if img_idx == 6:
         fx.scatter_plot()
     if img_idx == 7:
-        fx.word_cloud()
+        fx.wordcloud_fx()
 
 ########## Footer ##########
 
