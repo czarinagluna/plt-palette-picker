@@ -67,7 +67,7 @@ def bar_plot(num_bars, cmaps, sheet):
             ax.set(xlabel=None, ylabel=None, xticks=[], yticks=[], title=f'{cmap}')
         except:
             pass
-
+    
     plt.suptitle(f'{cmaps}', fontsize=20)
     
     st.pyplot(fig)
@@ -82,19 +82,17 @@ def bar_fx():
     colormaps = st.sidebar.radio('Classes of Colormaps', ['Perceptually Uniform Sequential', 'Sequential', 'Sequential (2)', 'Diverging', 'Cyclic', 'Qualitative', 'Miscellaneous'])
 
     with st.sidebar.expander('More'):
-        # st.code("plt.style.use('default')")
         style = st.radio('Style Sheets', ['default', 'bmh', 'classic', 'dark_background', 'fivethirtyeight', 'ggplot', 'seaborn', 'seaborn-colorblind', 'tableau-colorblind10'], index=0)
+        st.code(f"plt.style.use('{style}')")
+    
+    code = '''fig, ax = plt.subplots()
+sns.barplot(x, y, data, ax=ax, palette=colormap, ci=None)
+plt.show()'''
+
+    st.code(code, language='python')
 
     if st.button('Plot'):
         bar_plot(bars, colormaps, style)
-
-        st.markdown("<p style='font-family: Trebuchet MS;'>Code:</p>", unsafe_allow_html=True)
-
-        code = '''plt.style.use({stylesheet})
-fig, ax = plt.subplots()
-sns.barplot(x, y, data, ax=ax, palette={colormap}, ci=None)
-plt.show()'''
-        st.code(code, language='python')
 
 
 
@@ -182,8 +180,8 @@ def confusion_matrix_fx():
     colormaps = st.sidebar.radio('Classes of Colormaps', ['Perceptually Uniform Sequential', 'Sequential', 'Sequential (2)', 'Diverging', 'Cyclic', 'Qualitative', 'Miscellaneous'])
 
     with st.sidebar.expander('More'):
-        # st.code("plt.style.use('default')")
         style = st.radio('Style Sheets', ['default', 'bmh', 'classic', 'dark_background', 'fivethirtyeight', 'ggplot', 'seaborn', 'seaborn-colorblind', 'tableau-colorblind10'], index=0)
+        st.code(f"plt.style.use('{style}')")
 
     if st.sidebar.checkbox('Colorbar', value=True):
         colorbar = True
@@ -195,23 +193,19 @@ def confusion_matrix_fx():
     else:
         reverse = False
 
-    if st.button('Plot'):
-        plot_confusion_matrix(colormaps, colorbar, reverse, style)
-
-        st.markdown("<p style='font-family: Trebuchet MS;'>Code:</p>", unsafe_allow_html=True)
-
-        code = '''plt.style.use({stylesheet})
-
-fig, ax = plt.subplots()
+    code = '''fig, ax = plt.subplots()
 matrix = confusion_matrix(y_test, y_pred, normalize='true')
 
 cf = ConfusionMatrixDisplay(matrix, display_labels=['Negative', 'Positive'])
-cf.plot(cmap={colormap}, ax=ax)
+cf.plot(cmap=colormap, ax=ax)
 
 plt.show()'''
-        st.code(code, language='python') 
+    st.code(code, language='python') 
 
+    if st.button('Plot'):
+        plot_confusion_matrix(colormaps, colorbar, reverse, style)
 
+        
 
 
 
@@ -272,16 +266,14 @@ def heatmap_fx():
     else:
         masked = False
 
+    code = '''fig, ax = plt.subplots()
+mask = np.triu(np.ones_like(corr, dtype=bool))
+sns.heatmap(corr.abs(), cmap=colormap, mask=bool, annot=bool, cbar=bool)
+plt.show()'''
+    st.code(code, language='python')
+
     if st.button('Plot'):
         heat_map(vars, colormaps, masked, annotate, colorbar)
-
-        st.markdown("<p style='font-family: Trebuchet MS;'>Code:</p>", unsafe_allow_html=True)
-
-        code = '''fig, ax = plt.subplots()
-mask = np.triu(np.ones_like(corr, dtype=bool))
-sns.heatmap(corr.abs(), cmap={colormap}, mask={bool}, annot={bool}, cbar={bool})
-plt.show()'''
-        st.code(code, language='python')
 
 
 
@@ -372,21 +364,19 @@ A tag cloud (also known as a word cloud, wordle or weighted list in visual desig
 
     st.sidebar.write('[Documentation](https://amueller.github.io/word_cloud/generated/wordcloud.WordCloud.html)')
 
-    if st.button('Plot'):
-        if text is True:
-            word_cloud(colormaps, reverse, maxnum, background, text)
-        else:
-            word_cloud(colormaps, reverse, maxnum, background)
+    code = '''fig, ax = plt.subplots()
 
-        st.markdown("<p style='font-family: Trebuchet MS;'>Code:</p>", unsafe_allow_html=True)
-
-        code = '''fig, ax = plt.subplots()
-
-cloud = WordCloud(width=500, height=500, max_words={num_words}, 
-    colormap={colormap}, background_color={bg_color}).generate(text)
+cloud = WordCloud(width=500, height=500, max_words=max_words, 
+    colormap=colormap, background_color=background_color).generate(text)
 
 ax.imshow(cloud, interpolation='bilinear')
 ax.axis('off')
 
 plt.show()'''
-        st.code(code, language='python') 
+    st.code(code, language='python') 
+
+    if st.button('Plot'):
+        if text:
+            word_cloud(colormaps, reverse, maxnum, background, text)
+        else:
+            word_cloud(colormaps, reverse, maxnum, background)

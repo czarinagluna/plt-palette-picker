@@ -14,7 +14,7 @@ st.set_page_config(
 
 ########## Header ##########
 
-st.markdown("<h2 style='text-align: center; font-family: Trebuchet MS;'>The Palette Picker</h1>", unsafe_allow_html=True)
+st.markdown('<h2 style="text-align:center;"><a href="/" style="text-align:center; color:black; font-family:Trebuchet MS; text-decoration:None" target="_self">The Palette Picker</a></h2>', unsafe_allow_html=True)
 
 st.write("<p style='text-align: center; font-family: Helvetica;'>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>", unsafe_allow_html=True)
 
@@ -89,6 +89,39 @@ else:
         fx.scatter_plot()
     if img_idx == 7:
         fx.wordcloud_fx()
+
+
+########## Palette ##########
+
+# st.subheader('Colormaps')
+st.markdown('<h5>Colormaps</h5>', unsafe_allow_html=True)
+st.write("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.")
+
+colormaps = []
+for i in range(1,8):
+    colormaps.append(f'images/{i}.png')
+
+classes = []
+for file in colormaps:
+    with open(file, "rb") as image:
+        encoded = base64.b64encode(image.read()).decode()
+        classes.append(f"data:image/jpeg;base64,{encoded}")
+
+cmap_idx = clickable_images(
+    classes,
+    titles=['Perceptually Uniform Sequential', 'Sequential', 'Sequential (2)', 'Diverging', 'Cyclic', 'Qualitative', 'Miscellaneous'],
+    div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap"},
+    img_style={"margin": "5px", "height": "100px"},
+)
+
+# st.caption("<p style='text-align: center; font-family: Helvetica;'> Click on a Palette </p>", unsafe_allow_html=True)
+
+if cmap_idx > -1:
+    st.image(f'colormaps/class{cmap_idx}.png')
+    with st.expander('Lightness'):
+        st.image(f'colormaps/light{cmap_idx}.png')
+
+st.write('[Matplotlib Cheatsheets](https://matplotlib.org/cheatsheets/cheatsheets.pdf)')
 
 ########## Footer ##########
 
